@@ -96,6 +96,13 @@ exports.handler = function(event, context) {
     })
   })
 
+  //clean up
+  .then(function(result) {
+    return execute(result, {
+      shell: "rm -f /tmp/pngs/*; rm -f /tmp/renamed-pngs/*;"
+    })
+  })
+
   .then(function(result){
     console.log('finished');
     console.log(result);
