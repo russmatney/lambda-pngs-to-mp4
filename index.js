@@ -1,5 +1,6 @@
 var Q = require('q');
 var path = require('path');
+
 var execute = require('lambduh-execute');
 var validate = require('lambduh-validate');
 var download = require('lambduh-get-s3-object');
@@ -27,7 +28,6 @@ exports.handler = function(event, context) {
 
   //download pngs
   .then(function(result) {
-    console.log('getting png keys');
     var def = Q.defer();
 
     var promises = [];
@@ -41,7 +41,6 @@ exports.handler = function(event, context) {
 
     Q.all(promises)
       .then(function(results) {
-        console.log('downloaded!');
         def.resolve(results[0]);
       })
       .fail(function(err) {
@@ -53,8 +52,6 @@ exports.handler = function(event, context) {
 
   //rename, mv pngs
   .then(function(result) {
-    pngsDownloaded = new Date();
-    console.log('renaming');
 
     if (result.srcKey.indexOf('endcard') == -1) {
       return execute(result, {
@@ -75,7 +72,6 @@ exports.handler = function(event, context) {
         logOutput: true
       })
     }
-
   })
 
   //convert pngs to mp4
@@ -92,7 +88,6 @@ exports.handler = function(event, context) {
 
   //upload mp4
   .then(function(result) {
-    console.log('uploading');
     return upload(result, {
       dstBucket: result.dstBucket,
       dstKey: result.dstKey,
@@ -101,11 +96,11 @@ exports.handler = function(event, context) {
   })
 
   .then(function(result){
-    console.log('result');
+    console.log('finished');
+    console.log(result);
     context.done()
 
   }).fail(function(err) {
-    console.log('errorrrrrr');
     console.log(err);
     context.done(null, err);
   });
