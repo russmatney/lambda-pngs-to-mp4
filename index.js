@@ -11,7 +11,10 @@ exports.handler = function(event, context) {
   var result = event;
 
   validate(result, {
-    "srcKeys": true
+    "srcKeys": true,
+    "srcBucket": true,
+    "dstKey": true,
+    "dstBucket": true
   })
 
   //create /tmp/pngs/
@@ -30,7 +33,7 @@ exports.handler = function(event, context) {
     var promises = [];
     result.srcKeys.forEach(function(key) {
       promises.push(download(result, {
-        srcBucket: event.bucket,
+        srcBucket: result.srcBucket,
         srcKey: key,
         downloadFilepath: '/tmp/pngs/' + path.basename(key)
       }))
@@ -52,14 +55,27 @@ exports.handler = function(event, context) {
   .then(function(result) {
     pngsDownloaded = new Date();
     console.log('renaming');
-    return execute(result, {
-      bashScript: '/var/task/rename-pngs',
-      bashParams: [
-        '/tmp/pngs/*.png',// input files
-        '/tmp/renamed-pngs/'//output dir
-      ],
-      logOutput: true
-    })
+
+    if (result.srcKey.indexOf('endcard') == -1) {
+      return execute(result, {
+        bashScript: '/var/task/rename-pngs',
+        bashParams: [
+          '/tmp/pngs/*.png',// input files
+          '/tmp/renamed-pngs/'//output dir
+        ],
+        logOutput: true
+      })
+    } else {
+      return execute(result, {
+        bashScript: '/var/task/multiply-endcard',
+        bashParams: [
+          '/tmp/pngs/' + path.basename(result.srcKey), // input file (endcard)
+          '/tmp/renamed-pngs/' //output dir
+        ],
+        logOutput: true
+      })
+    }
+
   })
 
   //convert pngs to mp4

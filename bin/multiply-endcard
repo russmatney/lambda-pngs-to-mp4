@@ -1,0 +1,9 @@
+#!/bin/bash
+
+convert $1 PNG24:/tmp/endcard.png
+
+for i in {1..45}; do
+  NEWNAME=$(printf %04d.%s ${i%.*} ${f##*.})
+  NEWNAME=${NEWNAME:0:4}
+  cp /tmp/endcard.png $2$NEWNAME.png
+done
