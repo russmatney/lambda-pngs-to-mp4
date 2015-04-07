@@ -11,6 +11,7 @@ process.env['PATH'] = process.env['PATH'] + ':/tmp/:' + process.env['LAMBDA_TASK
 exports.handler = function(event, context) {
   var result = event;
 
+  //TODO: stricter validation
   validate(result, {
     "srcKeys": true,
     "srcBucket": true,
