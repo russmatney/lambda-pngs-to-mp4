@@ -43,7 +43,7 @@ exports.handler = function(event, context) {
     var def = Q.defer();
 
     if (event.srcUrl) {
-      downloadExternalFile(event.srcUrl, 'tmp/pngs/' + path.basename(event.srcUrl),
+      downloadExternalFile(event.srcUrl, '/tmp/pngs/' + path.basename(event.srcUrl),
         function(err) {
           if (err) {
             def.reject(err);
