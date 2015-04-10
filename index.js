@@ -78,21 +78,21 @@ exports.handler = function(event, context) {
   //rename, mv pngs
   .then(function(event) {
 
-    if (event.srcKey.indexOf('endcard') == -1) {
+    if (event.srcUrl) {
       return execute(event, {
-        bashScript: '/var/task/rename-pngs',
+        bashScript: '/var/task/multiply-endcard',
         bashParams: [
-          '/tmp/pngs/*.png',// input files
-          '/tmp/renamed-pngs/'//output dir
+          '/tmp/pngs/' + path.basename(event.srcUrl), // input file (endcard)
+          '/tmp/renamed-pngs/' //output dir
         ],
         logOutput: true
       })
     } else {
       return execute(event, {
-        bashScript: '/var/task/multiply-endcard',
+        bashScript: '/var/task/rename-pngs',
         bashParams: [
-          '/tmp/pngs/' + path.basename(event.srcKey), // input file (endcard)
-          '/tmp/renamed-pngs/' //output dir
+          '/tmp/pngs/*.png',// input files
+          '/tmp/renamed-pngs/'//output dir
         ],
         logOutput: true
       })
