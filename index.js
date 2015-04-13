@@ -28,10 +28,9 @@ exports.handler = function(event, context) {
   //download pngs
   .then(function(event) {
     if (event.srcUrl) {
-      return downloadFile({
-        filepath: '/tmp/pngs/' + path.basename(event.srcUrl),
-        url: event.srcUrl
-      })
+      event.filepath = '/tmp/pngs/' + path.basename(event.srcUrl);
+      event.url = event.srcUrl;
+      return downloadFile(event);
     } else {
       var def = Q.defer();
 
