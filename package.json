@@ -9,7 +9,7 @@
   "author": "Russell Matney <russell.matney@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "aws-sdk": "^2.1.20",
+    "aws-sdk": "2.1.20",
     "chai": "^2.2.0",
     "del": "^1.1.1",
     "gulp": "^3.8.11",
@@ -20,11 +20,11 @@
     "run-sequence": "^1.0.2"
   },
   "dependencies": {
+    "lambduh-download-file": "^0.1.1",
     "lambduh-execute": "git://github.com/lambduh/lambduh-execute.git#master",
-    "lambduh-get-s3-object": "git://github.com/lambduh/lambduh-get-s3-object.git#master",
+    "lambduh-get-s3-object": "^1.1.0",
     "lambduh-put-s3-object": "^1.0.0",
     "lambduh-validate": "^1.1.0",
     "q": "^1.2.0",
-    "request": "^2.55.0"
   }
 }

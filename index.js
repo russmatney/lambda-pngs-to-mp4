@@ -1,26 +1,13 @@
 var Q = require('q');
 var path = require('path');
-var fs = require('fs');
-var req = require('request');
 
 var execute = require('lambduh-execute');
 var validate = require('lambduh-validate');
-var download = require('lambduh-get-s3-object');
+var s3Download = require('lambduh-get-s3-object');
 var upload = require('lambduh-put-s3-object');
+var downloadFile = require('lambduh-download-file');
 
 process.env['PATH'] = process.env['PATH'] + ':/tmp/:' + process.env['LAMBDA_TASK_ROOT']
-
-var downloadExternalFile = function(url, dest, cb) {
-  var file = fs.createWriteStream(dest);
-  file.on('finish', function() {
-    file.close(cb);  // close() is async, call cb after close completes.
-  });
-  file.on('error', function(err) { // Handle errors
-    fs.unlink(dest); // Delete the file async. (But we don't check the result)
-    if (cb) cb(err.message);
-  });
-  req(url).pipe(file);
-};
 
 exports.handler = function(event, context) {
   validate(event, {
@@ -40,23 +27,17 @@ exports.handler = function(event, context) {
 
   //download pngs
   .then(function(event) {
-    var def = Q.defer();
-
     if (event.srcUrl) {
-      downloadExternalFile(event.srcUrl, '/tmp/pngs/' + path.basename(event.srcUrl),
-        function(err) {
-          if (err) {
-            def.reject(err);
-          } else {
-            def.resolve(event)
-          }
-        })
-
+      return downloadFile({
+        filepath: '/tmp/pngs/' + path.basename(event.srcUrl),
+        url: event.srcUrl
+      })
     } else {
+      var def = Q.defer();
 
       var promises = [];
       event.srcKeys.forEach(function(key) {
-        promises.push(download(event, {
+        promises.push(s3Download(event, {
           srcBucket: event.srcBucket,
           srcKey: key,
           downloadFilepath: '/tmp/pngs/' + path.basename(key)
@@ -70,9 +51,8 @@ exports.handler = function(event, context) {
         .fail(function(err) {
           def.reject(err);
         });
-
+      return def.promise;
     }
-    return def.promise;
   })
 
   //rename, mv pngs
