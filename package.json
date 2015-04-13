@@ -21,10 +21,10 @@
   },
   "dependencies": {
     "lambduh-download-file": "^0.1.1",
-    "lambduh-execute": "git://github.com/lambduh/lambduh-execute.git#master",
+    "lambduh-execute": "^1.3.0",
     "lambduh-get-s3-object": "^1.1.0",
     "lambduh-put-s3-object": "^1.0.0",
     "lambduh-validate": "^1.1.0",
-    "q": "^1.2.0",
+    "q": "^1.2.0"
   }
 }
