@@ -17,9 +17,8 @@ Invoke this function like any lambda function, as documented in the aws sdk.
 
 ## required
 
-- `` - 
-- `` - 
-- `` - 
-- `` - 
-
+- `srcBucket` - S3 bucket with the pngs
+- `srcKeys` - Array of keys to download from the srcBucket
+- `dstBucket` - S3 bucket to dump the mp4
+- `dstKey` - Key to upload the mp4 to
 
